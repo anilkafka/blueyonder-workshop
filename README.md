@@ -28,7 +28,7 @@ This workshop perfect for those looking to get started with Confluent Cloud and 
 | Break  |  2.45 - 3:00  |  |
 | Confluent Technology Deep Dive |  3:00 - 4:00 PM  | Anil Dosapati - Confluent |
 | PoC Discussion |  4:00 - 4:45 PM | Confluent Team |
-| Next steps and Our Partnership |  4:45 - 5:00  |  Confluent and Blue Yonder  |
+| Next steps and Our Partnership |  4:45 - 5:00 PM |  Confluent and Blue Yonder  |
 
 ## Topics Covered in the Demo and Workshop:
 1. [Log into Confluent Cloud](#step-1)
