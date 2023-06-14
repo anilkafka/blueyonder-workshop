@@ -24,14 +24,11 @@ This workshop perfect for those looking to get started with Confluent Cloud and 
 | Topic |  Time  | Speaker |
 | --- |  ---  | --- |
 | Workshop Kickoff |  1:00 - 1:15  | Tucker Fisher - Confluent |
-| Blue Yonder Use-Cases and Architecture |  1.15 - 2:00 PM | BlueYonder team |
-| Break  |  2.00 - 2:15  |  |
-| Confluent Introduction and <br/> Deep Dive |  2:15 - 3:15 PM  | Anil Dosapati - Confluent |
-| break |  3:15 - 3:30 PM  | |
-| Confluent Cloud Pricing |  3:30 - 4:00 PM | Confluent Team |
-| BlueYonder's Sandbox environment |  4:00 - 4:30  |  Anil Dosapati |
-| POC Discussion |  4:30 - 5:00  |  Confluent Team  |
-| Next steps and Our Partnership |  5:00 - 5:30  |  Confluent and Blue Yonder  |
+| Blue Yonder Use-Cases and Architecture |  1.15 - 2:45 PM | BlueYonder team |
+| Break  |  2.45 - 3:00  |  |
+| Confluent Technology Deep Dive |  3:00 - 4:00 PM  | Anil Dosapati - Confluent |
+| PoC Discussion |  4:00 - 4:45 PM | Confluent Team |
+| Next steps and Our Partnership |  4:45 - 5:00  |  Confluent and Blue Yonder  |
 
 ## Topics Covered in the Demo and Workshop:
 1. [Log into Confluent Cloud](#step-1)
