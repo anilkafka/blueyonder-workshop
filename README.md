@@ -6,7 +6,7 @@
     <img src="images/confluent.png" width=50% height=50%>
 </div>
 
-# <div align="center">'Blue Yonder' Demo and Workshop repository</div>
+# <div align="center">Blue Yonder Demo and Workshop repository</div>
 
 This repository contains workshop content for Blue Yonder to be held on <b>06/20</b>. Content with the lab instructions and hands-on guide will be updated before the workshop. Please see below for the details of the workshop and agenda: 
 
@@ -23,15 +23,15 @@ This workshop perfect for those looking to get started with Confluent Cloud and 
 
 | Topic |  Time  | Speaker |
 | --- |  ---  | --- |
-| Workshop Kickoff |  2:00 - 2:15  | Tucker Fisher - Confluent |
-| Blue Yonder Use-Cases and Architecture |  2.15 - 3:00 PM | Confluent team |
-| Break  |  3.00 - 3:15  |  |
-| Confluent Introduction and <br/> Deep Dive |  3:15 - 4:15 PM  | Anil Dosapati - Confluent |
-| break |  4:15 - 4:30 PM  | |
-| Confluent Cloud Pricing |  4:30 - 5:00 PM | Confluent Team |
-| BlueYonder's Sandbox environment |  5:00 - 5:30  |  Anil Dosapati |
-| POC Discussion |  5:30 - 6:00  |  Confluent Team  |
-| Next steps and Our Partnership |  6:00 - 6:30  |  Confluent and Blue Yonder  |
+| Workshop Kickoff |  1:00 - 1:15  | Tucker Fisher - Confluent |
+| Blue Yonder Use-Cases and Architecture |  1.15 - 2:00 PM | BlueYonder team |
+| Break  |  2.00 - 2:15  |  |
+| Confluent Introduction and <br/> Deep Dive |  2:15 - 3:15 PM  | Anil Dosapati - Confluent |
+| break |  3:15 - 3:30 PM  | |
+| Confluent Cloud Pricing |  3:30 - 4:00 PM | Confluent Team |
+| BlueYonder's Sandbox environment |  4:00 - 4:30  |  Anil Dosapati |
+| POC Discussion |  4:30 - 5:00  |  Confluent Team  |
+| Next steps and Our Partnership |  5:00 - 5:30  |  Confluent and Blue Yonder  |
 
 ## Topics Covered in the Demo and Workshop:
 1. [Log into Confluent Cloud](#step-1)
@@ -45,16 +45,13 @@ This workshop perfect for those looking to get started with Confluent Cloud and 
 6. [Create ksqlDB Application](#step-8)
     * [Create a Stream and a Table](#step-9)
     * [Create a Persistent Query](#step-10)
-    * [Aggregate data](#step-11)
-    * [Windowing Operations and Fraud Detection](#step-12)
-    * [Pull Queries](#step-13)
-7. [Stream Governance](#step-14)
-8. [Set Up: Connect Self Managed Services to Confluent Cloud](#step-15)
-    * [Deploy: Connect Self Managed Services to Confluent Cloud](#step-16)
-    * [Launch: PostgreSQL Source Connector in Confluent Control Center](#step-17)
-9. [Confluent Cloud Schema Registry](#step-18)
-10. [Clean Up Resources](#step-19)
-11. [Confluent Resources and Further Testing](#step-20)
+    * [Aggregate data](#step-11)    
+7. [Stream Governance](#step-12)
+8. [Set Up: Connect Self Managed Services to Confluent Cloud](#step-13)
+    * [Deploy: Connect Self Managed Services to Confluent Cloud](#step-14)    
+9. [Confluent Cloud Schema Registry](#step-15)
+10. [Clean Up Resources](#step-16)
+11. [Confluent Resources and Further Testing](#step-17)
 
 ***
 
@@ -523,89 +520,7 @@ CREATE TABLE total_stock_purchased AS
 
 ***
 
-## <a name="step-12"></a> Windowing Operations and Fraud Detection
-
-You will walk through a few examples on how to use ksqlDB for Windowing, including how to use it for anomaly or fraud detection. ksqlDB enables aggregation operations on streams and tables, as you saw in the previous step, and you have the ability to set time boundaries named windows. A window has a start time and an end time, which you access in your queries by using `WINDOWSTART` and `WINDOWEND`. When using Windowing, aggregate functions are applied only to the records that occur within the specified time window. ksqlDB tracks windows per record key.
-
-There are a few different Windowing operations you can use with ksqlDB. You can learn more about them [here](https://docs.ksqldb.io/en/latest/concepts/time-and-windows-in-ksqldb-queries/#window-types).
-
-1. In the ksqlDB **Editor**, paste the following command in order to create a windowed table named **stocks_purchased_today** from the **stocks_topic**. You can set the size of the window to any duration. Set it to 5 minutes in this example.
-
-```sql
-CREATE TABLE stocks_purchased_today AS
-    SELECT symbol,
-           COUNT(*) AS quantity
-    FROM stocks_enriched
-    WINDOW TUMBLING (SIZE 5 MINUTES)
-    GROUP BY symbol;
-```
-
-2. Once you have created the windowed table, use the **Editor** or the **Tables** tab to query the table. If you construct the statement on your own, make sure it looks like the following. 
-
-```sql
-SELECT * FROM STOCKS_PURCHASED_TODAY EMIT CHANGES;
-```
-
-* The output should be similar to the following.
-
-<div align="center">
-    <img src="images/today-bought-select-results.png" width=75% height=75%>
-</div>
-
-3. Going along with the theme of fraud detection, create a table named **accounts_to_monitor** with accounts to monitor based on their activity during a given time frame. In the ksqlDB **Editor**, paste the following statement and run the query.
-
-```sql
-CREATE TABLE accounts_to_monitor AS
-    SELECT TIMESTAMPTOSTRING(WINDOWSTART, 'yyyy-MM-dd HH:mm:ss Z') AS WINDOW_START,
-           TIMESTAMPTOSTRING(WINDOWEND, 'yyyy-MM-dd HH:mm:ss Z') AS WINDOW_END,
-           ACCOUNT,
-           COUNT(*) AS quantity
-    FROM STOCKS_ENRICHED
-    WINDOW TUMBLING (SIZE 5 MINUTES)
-    GROUP BY ACCOUNT
-    HAVING COUNT(*) > 10;
-```
-
-4. Once you have created the **ACCOUNTS_TO_MONITOR** table, use either the **Editor** or the **Tables** tab to query the data from the table. If you construct the statement on your own, make sure it looks like the following.
-
-```sql
-SELECT * FROM ACCOUNTS_TO_MONITOR EMIT CHANGES;
-```
-
-* The output from this query should look like the following. 
-
-<div align="center">
-    <img src="images/accounts-to-monitor-select-results.png" width=75% height=75%>
-</div>
-
-***
-
-## <a name="step-13"></a>Pull Queries
-
-Building on our Fraud Detection example from the last step, let’s say our fraud service wants to check on high frequency accounts. The fraud service can send a pull query via the ksql API, today we will just mock it with the UI. Then we can monitor the activity for a suspicious account. 
-
-1. First we need to add a property to our query. Pull queries only filter by the primary key by default. To filter by other fields, we need to enable table scans. You can add a property under the auto.offset.reset one already included. You will need to set ksql.query.pull.table.scan.enabled to true
-
-<div align="center">
-    <img src="images/table-scan-true.png" width=50% height=50%>
-</div>
-
-2. Now let’s run our pull query in the Editor to see how our accounts are behaving.  
-
-```sql
-SELECT * FROM ACCOUNTS_TO_MONITOR
-     WHERE QUANTITY > 100;
-```
-3. Once we have identified a potential troublemaker, we can create an ephemeral push query to monitor future trades from our **STOCKS_ENRICHED** stream. This will continue to push trades to the fraud service for further analysis until it is stopped. 
-
-```sql
-SELECT * FROM STOCKS_ENRICHED 
-    WHERE ACCOUNT = 'ABC123'
-    EMIT CHANGES;
-```
-***
-
-## <a name="step-14"></a>**Stream Governance**
+## <a name="step-12"></a>**Stream Governance**
 
 1. Stream Governance is built on 3 key strategic pillars: Stream lineage,Stream Catalog and Stream quality. This can be enabled by going to schema registry tab in the navigation:
 
@@ -640,7 +555,7 @@ A topic contains messages, and each message is a key-value pair. The message key
 
 We will get back to this section later in the demo where we can go through the schemas, Schema Evolution, versions and such.
 
-## <a name="step-15"></a>**Set up and Connect Self Managed Services to Confluent Cloud**
+## <a name="step-13"></a>**Set up and Connect Self Managed Services to Confluent Cloud**
 
 Let’s say you have a database, or object storage such as AWS S3, Azure Blob Storage, or Google Cloud Storage, or a data warehouse such as Snowflake. How do you connect these data systems to your architecture?
 
@@ -728,82 +643,6 @@ You are now ready to start your Confluent Platform services - Connect and Contro
 3. Within Docker Desktop, go to Dashboard. Check if the services, including the PostgreSQL database, are all running successfully.
 
 You have successfully installed the Debezium PostgreSQL CDC Source connector on your local Connect cluster. You also have a PostgreSQL database running in the container. These are all connected to Confluent Cloud. You are now ready to start producing data from your PostgreSQL database to Confluent Cloud.
-
-## <a name="step-17"></a>**Launch: PostgreSQL Source Connector in Confluent Control Center**
-
-You have seen and worked within the Confluent Cloud Dashboard in the previous steps. Because you have Confluent Platform services deployed, you can use Confluent Control Center (C3) to manage and monitor Confluent Platform, and it is also connected to Confluent Cloud from your set up. You will see confirmation that Control Center is indeed connected to Confluent Cloud by the end of this step.
-
-1. In the confluent cloud demo cluster, create a topic named: dbserver1.inventory.customers with 1 partition. We will use the topic here in the connect demo
-2. Open a browser and go to **http://localhost:9021/** to access Confluent Control Center.
-
-    <div align="center">
-       <img src="images/c3-landing-page.png" width=50% height=50%>
-    </div>
-
-    You will notice that the UI looks very similar to the Confluent Cloud dashboard. 
-
-3. Click on the cluster, then click on **Topics**, and you should notice the **stocks_topic** topic that you had created in Confluent Cloud earlier in the Demo. This is your first confirmation that Control Center and local Connect cluster are successfully connected to Confluent Cloud.
-    
-    <div align="center">
-       <img src="images/c3-all-topics.png" width=50% height=50%>
-    </div>
-
-4.Click on **Connect**. You will see a cluster already here named **connect-default**. If not, please refresh the page. This is your local Connect cluster that you have running in Docker. 
-
-    <div align="center">
-       <img src="images/c3-all-connect.png" width=75% height=75%>
-    </div>
-
-5. Click on **connect-default**, **Add Connector**, and then on the **PostgresConnector Source** tile. 
-
-    <div align="center">
-       <img src="images/c3-browse-connect.png" width=75% height=75%>
-    </div>
-
-6. As the final step in deploying the self managed PostgreSQL CDC Source connector, you will now create the connector. Enter the following configuration details:
-    ```bash
-    Name = PostgresSource
-    Tasks max = 1
-    Namespace = dbserver1
-    Hostname = postgres
-    Port = 5432
-    User = postgres
-    Password = confluent2021
-    Database = postgres
-    ```
-
-    If you have networking rules that may not allow for connection to 0.0.0.0, then use *docker.for.mac.host.internal* as the hostname for Mac and use *docker.for.win.localhost* for Windows.
-
-7. Scroll down to the very bottom of the page, click on **Continue**, review the configuration details, then click on **Launch.**
-    <div align="center">
-       <img src="images/c3-launch-connector.png" width=75% height=75%>
-    </div>
-
-8. Verify that the connector is running.
-
-    <div align="center">
-       <img src="images/c3-running-connectors.png" width=75% height=75%>
-    </div>
-
-9. Return to the Confluent Cloud UI, click on your cluster tile, then on **Topics**, then on the topic **dbserver1.inventory.customers**. You will now confirm that your PostgreSQL connector is working by checking to see if data is being produced to our Confluent Cloud cluster. You will see data being produced under the **Production** tile. 
-
-10. Another way to confirm is to view the messages within the UI. Click on **Messages**. In the search bar at the top, set it to **Jump to Offset**. Enter **0** as the offset and click on the result **0 / Partition: 0**. 
-
-    Remember, you created this topic with 1 partition. That partition is Partition 0.
-    
-11. You should now be able to see the messages within the UI. Click on the cards view (left option) to see the messages in a different format.
-
-    <div align="center">
-       <img src="images/c3-cards.png" width=25% height=25%>
-    </div>
-
-    The messages should resemble:
-
-    <div align="center">
-       <img src="images/c3-messages.png" width=75% height=75%>
-    </div>
-
-    > **Note:** The unrecognized characters are a plaintext representation of Avro.
 
 ## <a name="step-18"></a>**Confluent Cloud Schema Registry**
 
