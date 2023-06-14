@@ -629,7 +629,7 @@ Now that you have completed setting up your Confluent Cloud account, cluster, to
 
     If successful, your output will return: `{ }%`
 
-## <a name="step-16"></a>**Deploy: Connect Self Managed Services to Confluent Cloud**
+## <a name="step-14"></a>**Deploy: Connect Self Managed Services to Confluent Cloud**
 
 You are now ready to start your Confluent Platform services - Connect and Control Center. Both will be connected to your cluster in Confluent Cloud, which is what you accomplished in the earlier steps.
 
@@ -644,7 +644,7 @@ You are now ready to start your Confluent Platform services - Connect and Contro
 
 You have successfully installed the Debezium PostgreSQL CDC Source connector on your local Connect cluster. You also have a PostgreSQL database running in the container. These are all connected to Confluent Cloud. You are now ready to start producing data from your PostgreSQL database to Confluent Cloud.
 
-## <a name="step-18"></a>**Confluent Cloud Schema Registry**
+## <a name="step-15"></a>**Confluent Cloud Schema Registry**
 
 In this final section of the workshop, you will explore Confluent Cloud Schema Registry, which is used to manage and store a versioned history of all of your schemas. Confluent Cloud Schema Registry is fully-managed and supports JSON, Avro, and Protobuf.
 
@@ -673,7 +673,7 @@ In this final section of the workshop, you will explore Confluent Cloud Schema R
 6. Click on **View & Manage Schemas** to view a searchable list of all your schemas available in your Confluent Cloud environment.
 
 
-## <a name="step-19"></a>Clean Up Resources
+## <a name="step-16"></a>Clean Up Resources
 
 Deleting the resources you created during this workshop will prevent you from incurring additional charges. 
 
@@ -697,7 +697,7 @@ Deleting the resources you created during this workshop will prevent you from in
 
 *** 
 
-## <a name="step-20"></a>Confluent Resources and Further Testing
+## <a name="step-17"></a>Confluent Resources and Further Testing
 
 Here are some links to check out if you are interested in further testing:
 - [ksqlDB Tutorials](https://kafka-tutorials.confluent.io/)
